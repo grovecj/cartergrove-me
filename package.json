@@ -4,6 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "db:up": "docker compose up -d",
+    "db:down": "docker compose down",
+    "db:push": "npx prisma db push",
+    "db:seed": "npx prisma db seed",
+    "db:reset": "npx prisma db push --force-reset && npx prisma db seed",
+    "db:studio": "npx prisma studio",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
