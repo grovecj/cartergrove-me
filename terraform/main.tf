@@ -47,30 +47,11 @@ variable "domain" {
 }
 
 # --- GitHub Repository ---
+# The repo already exists at github.com/grovecj/cartergrove-me.
+# Use a data source to reference it without trying to create it.
 
-resource "github_repository" "site" {
-  name        = "cartergrove-me"
-  description = "Personal website — cartergrove.me"
-  visibility  = "public"
-
-  has_issues   = true
-  has_projects = false
-  has_wiki     = false
-
-  lifecycle {
-    prevent_destroy = true
-  }
-}
-
-resource "github_branch_protection" "main" {
-  repository_id = github_repository.site.node_id
-  pattern       = "main"
-
-  required_pull_request_reviews {
-    required_approving_review_count = 0
-  }
-
-  enforce_admins = false
+data "github_repository" "site" {
+  full_name = "grovecj/cartergrove-me"
 }
 
 # --- DigitalOcean Droplet ---
