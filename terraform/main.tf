@@ -54,6 +54,18 @@ data "github_repository" "site" {
   full_name = "grovecj/cartergrove-me"
 }
 
+resource "github_branch_protection" "main" {
+  repository_id = data.github_repository.site.node_id
+  pattern       = "main"
+
+  required_pull_request_reviews {
+    required_approving_review_count = 1
+    require_code_owner_reviews      = true
+  }
+
+  enforce_admins = false
+}
+
 # --- DigitalOcean Droplet ---
 
 resource "digitalocean_droplet" "web" {
