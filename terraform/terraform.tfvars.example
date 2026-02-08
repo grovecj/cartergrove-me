@@ -1,0 +1,4 @@
+do_token              = "your-digitalocean-api-token"
+github_token          = "your-github-personal-access-token"
+ssh_key_fingerprint   = "your-ssh-key-fingerprint"
+domain                = "cartergrove.me"

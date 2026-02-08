@@ -1,0 +1,122 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model ResumeProfile {
+  id        String @id @default(cuid())
+  name      String
+  title     String
+  email     String
+  phone     String
+  location  String
+  website   String
+  github    String
+  linkedin  String
+  summary   String
+}
+
+model Skill {
+  id       String @id @default(cuid())
+  category String
+  items    String // JSON array stored as text
+  order    Int    @default(0)
+}
+
+model WorkExperience {
+  id       String @id @default(cuid())
+  company  String
+  title    String
+  location String
+  start    String
+  end      String
+  bullets  String // JSON array stored as text
+  order    Int    @default(0)
+}
+
+model Education {
+  id       String @id @default(cuid())
+  school   String
+  degree   String
+  field    String
+  start    String
+  end      String
+  gpa      String?
+  bullets  String? // JSON array stored as text
+  order    Int     @default(0)
+}
+
+model BlogPost {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  excerpt     String
+  content     String
+  tags        String   // JSON array stored as text
+  published   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model PortfolioProject {
+  id          String @id @default(cuid())
+  slug        String @unique
+  title       String
+  subdomain   String
+  tagline     String
+  description String
+  techStack   String // JSON array stored as text
+  features    String // JSON array stored as text
+  heroImage   String?
+  githubUrl   String?
+  liveUrl     String
+  order       Int    @default(0)
+}

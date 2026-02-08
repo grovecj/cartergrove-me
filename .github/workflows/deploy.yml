@@ -1,0 +1,46 @@
+name: Build & Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - run: npx prisma generate
+
+      - run: npm run build
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+      - name: Deploy to Droplet
+        uses: burnett01/rsync-deployments@6.0.0
+        with:
+          switches: -avz --delete --exclude='.env' --exclude='node_modules' --exclude='.next/cache'
+          path: ./
+          remote_path: /opt/cartergrove-me/
+          remote_host: ${{ secrets.DROPLET_IP }}
+          remote_user: deploy
+          remote_key: ${{ secrets.DEPLOY_SSH_KEY }}
+
+      - name: Install & Restart
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.DROPLET_IP }}
+          username: deploy
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          script: |
+            cd /opt/cartergrove-me
+            npm ci --production
+            npx prisma generate
+            pm2 restart cartergrove-me || pm2 start npm --name cartergrove-me -- start
