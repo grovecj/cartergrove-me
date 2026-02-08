@@ -35,8 +35,8 @@ variable "github_token" {
   sensitive   = true
 }
 
-variable "ssh_key_fingerprint" {
-  description = "SSH key fingerprint registered with DigitalOcean"
+variable "ssh_key_name" {
+  description = "Name of the SSH key registered with DigitalOcean"
   type        = string
 }
 
@@ -66,6 +66,12 @@ resource "github_branch_protection" "main" {
   enforce_admins = false
 }
 
+# --- SSH Key ---
+
+data "digitalocean_ssh_key" "main" {
+  name = var.ssh_key_name
+}
+
 # --- DigitalOcean Droplet ---
 
 resource "digitalocean_droplet" "web" {
@@ -73,7 +79,7 @@ resource "digitalocean_droplet" "web" {
   region   = "nyc1"
   size     = "s-1vcpu-1gb"
   image    = "ubuntu-24-04-x64"
-  ssh_keys = [var.ssh_key_fingerprint]
+  ssh_keys = [data.digitalocean_ssh_key.main.id]
 
   tags = ["cartergrove", "web"]
 }
@@ -116,13 +122,14 @@ resource "digitalocean_firewall" "web" {
 }
 
 # --- DNS ---
+# The domain already exists in DigitalOcean.
 
-resource "digitalocean_domain" "root" {
+data "digitalocean_domain" "root" {
   name = var.domain
 }
 
 resource "digitalocean_record" "a_root" {
-  domain = digitalocean_domain.root.id
+  domain = data.digitalocean_domain.root.id
   type   = "A"
   name   = "@"
   value  = digitalocean_droplet.web.ipv4_address
@@ -130,7 +137,7 @@ resource "digitalocean_record" "a_root" {
 }
 
 resource "digitalocean_record" "a_www" {
-  domain = digitalocean_domain.root.id
+  domain = data.digitalocean_domain.root.id
   type   = "CNAME"
   name   = "www"
   value  = "${var.domain}."
