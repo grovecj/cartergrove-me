@@ -9,6 +9,10 @@ terraform {
       source  = "integrations/github"
       version = "~> 6.0"
     }
+    tls = {
+      source  = "hashicorp/tls"
+      version = "~> 4.0"
+    }
   }
 }
 
@@ -44,6 +48,12 @@ variable "domain" {
   description = "Root domain"
   type        = string
   default     = "cartergrove.me"
+}
+
+variable "database_url" {
+  description = "Production PostgreSQL connection string"
+  type        = string
+  sensitive   = true
 }
 
 # --- GitHub Repository ---
@@ -147,8 +157,39 @@ resource "digitalocean_record" "a_www" {
 # NOTE: gif.cartergrove.me and stats.cartergrove.me DNS records
 # are managed by their respective project repositories.
 
+# --- Deploy Key (for GitHub Actions → Droplet) ---
+
+resource "tls_private_key" "deploy" {
+  algorithm = "ED25519"
+}
+
+# --- GitHub Actions Secrets ---
+
+resource "github_actions_secret" "droplet_ip" {
+  repository      = data.github_repository.site.name
+  secret_name     = "DROPLET_IP"
+  plaintext_value = digitalocean_droplet.web.ipv4_address
+}
+
+resource "github_actions_secret" "deploy_ssh_key" {
+  repository      = data.github_repository.site.name
+  secret_name     = "DEPLOY_SSH_KEY"
+  plaintext_value = tls_private_key.deploy.private_key_openssh
+}
+
+resource "github_actions_secret" "database_url" {
+  repository      = data.github_repository.site.name
+  secret_name     = "DATABASE_URL"
+  plaintext_value = var.database_url
+}
+
 # --- Outputs ---
 
 output "droplet_ip" {
   value = digitalocean_droplet.web.ipv4_address
+}
+
+output "deploy_public_key" {
+  description = "Add this to the deploy user's authorized_keys on the droplet"
+  value       = tls_private_key.deploy.public_key_openssh
 }
