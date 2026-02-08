@@ -10,7 +10,8 @@ DEPLOY_USER="deploy"
 echo "==> Creating deploy user"
 id -u "$DEPLOY_USER" &>/dev/null || adduser --disabled-password --gecos "" "$DEPLOY_USER"
 mkdir -p /home/$DEPLOY_USER/.ssh
-cp /root/.ssh/authorized_keys /home/$DEPLOY_USER/.ssh/authorized_keys
+touch /home/$DEPLOY_USER/.ssh/authorized_keys
+cat /root/.ssh/authorized_keys >> /home/$DEPLOY_USER/.ssh/authorized_keys
 chown -R $DEPLOY_USER:$DEPLOY_USER /home/$DEPLOY_USER/.ssh
 chmod 700 /home/$DEPLOY_USER/.ssh
 chmod 600 /home/$DEPLOY_USER/.ssh/authorized_keys
