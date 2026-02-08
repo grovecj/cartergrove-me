@@ -47,27 +47,20 @@ variable "domain" {
 }
 
 # --- GitHub Repository ---
+# The repo already exists at github.com/grovecj/cartergrove-me.
+# Use a data source to reference it without trying to create it.
 
-resource "github_repository" "site" {
-  name        = "cartergrove-me"
-  description = "Personal website — cartergrove.me"
-  visibility  = "public"
-
-  has_issues   = true
-  has_projects = false
-  has_wiki     = false
-
-  lifecycle {
-    prevent_destroy = true
-  }
+data "github_repository" "site" {
+  full_name = "grovecj/cartergrove-me"
 }
 
 resource "github_branch_protection" "main" {
-  repository_id = github_repository.site.node_id
+  repository_id = data.github_repository.site.node_id
   pattern       = "main"
 
   required_pull_request_reviews {
-    required_approving_review_count = 0
+    required_approving_review_count = 1
+    require_code_owner_reviews      = true
   }
 
   enforce_admins = false
@@ -144,21 +137,8 @@ resource "digitalocean_record" "a_www" {
   ttl    = 300
 }
 
-resource "digitalocean_record" "cname_gif" {
-  domain = digitalocean_domain.root.id
-  type   = "CNAME"
-  name   = "gif"
-  value  = "${var.domain}."
-  ttl    = 300
-}
-
-resource "digitalocean_record" "cname_stats" {
-  domain = digitalocean_domain.root.id
-  type   = "CNAME"
-  name   = "stats"
-  value  = "${var.domain}."
-  ttl    = 300
-}
+# NOTE: gif.cartergrove.me and stats.cartergrove.me DNS records
+# are managed by their respective project repositories.
 
 # --- Outputs ---
 
