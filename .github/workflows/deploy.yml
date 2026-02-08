@@ -41,6 +41,8 @@ jobs:
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           script: |
             cd /opt/cartergrove-me
-            npm ci --production
+            npm ci --omit=dev
             npx prisma generate
+            npx prisma db push --skip-generate
             pm2 restart cartergrove-me || pm2 start npm --name cartergrove-me -- start
+            pm2 save
