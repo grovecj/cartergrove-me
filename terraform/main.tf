@@ -144,21 +144,8 @@ resource "digitalocean_record" "a_www" {
   ttl    = 300
 }
 
-resource "digitalocean_record" "cname_gif" {
-  domain = digitalocean_domain.root.id
-  type   = "CNAME"
-  name   = "gif"
-  value  = "${var.domain}."
-  ttl    = 300
-}
-
-resource "digitalocean_record" "cname_stats" {
-  domain = digitalocean_domain.root.id
-  type   = "CNAME"
-  name   = "stats"
-  value  = "${var.domain}."
-  ttl    = 300
-}
+# NOTE: gif.cartergrove.me and stats.cartergrove.me DNS records
+# are managed by their respective project repositories.
 
 # --- Outputs ---
 
