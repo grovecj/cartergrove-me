@@ -183,6 +183,19 @@ I'm planning to add more projects and blog posts as I continue building. Stay tu
     },
   });
 
+  // Under Construction Banner
+  await prisma.banner.upsert({
+    where: { id: "banner-1" },
+    update: {},
+    create: {
+      id: "banner-1",
+      message: "This site is under construction. Some content may be incomplete.",
+      variant: "warning",
+      active: true,
+      order: 0,
+    },
+  });
+
   console.log("Database seeded successfully!");
 }
 

@@ -42,6 +42,12 @@ export default async function AdminLayout({
           >
             Portfolio
           </Link>
+          <Link
+            href="/admin/banners"
+            className="text-sm font-medium text-muted-foreground hover:text-foreground"
+          >
+            Banners
+          </Link>
         </nav>
         <AdminSignOut />
       </div>

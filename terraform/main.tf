@@ -56,6 +56,23 @@ variable "database_cluster_name" {
   default     = "mlb-stats-db"
 }
 
+variable "auth_secret" {
+  description = "NextAuth.js secret for session encryption"
+  type        = string
+  sensitive   = true
+}
+
+variable "github_client_id" {
+  description = "GitHub OAuth App client ID (production)"
+  type        = string
+}
+
+variable "github_client_secret" {
+  description = "GitHub OAuth App client secret (production)"
+  type        = string
+  sensitive   = true
+}
+
 # --- GitHub Repository ---
 # The repo already exists at github.com/grovecj/cartergrove-me.
 # Use a data source to reference it without trying to create it.
@@ -92,6 +109,17 @@ resource "digitalocean_droplet" "web" {
   ssh_keys = [data.digitalocean_ssh_key.main.id]
 
   tags = ["cartergrove", "web"]
+}
+
+# --- Reserved (Static) IP ---
+
+resource "digitalocean_reserved_ip" "web" {
+  region = "nyc1"
+}
+
+resource "digitalocean_reserved_ip_assignment" "web" {
+  ip_address = digitalocean_reserved_ip.web.ip_address
+  droplet_id = digitalocean_droplet.web.id
 }
 
 # --- Firewall ---
@@ -142,7 +170,7 @@ resource "digitalocean_record" "a_root" {
   domain = data.digitalocean_domain.root.id
   type   = "A"
   name   = "@"
-  value  = digitalocean_droplet.web.ipv4_address
+  value  = digitalocean_reserved_ip.web.ip_address
   ttl    = 300
 }
 
@@ -189,7 +217,7 @@ resource "tls_private_key" "deploy" {
 resource "github_actions_secret" "droplet_ip" {
   repository      = data.github_repository.site.name
   secret_name     = "DROPLET_IP"
-  plaintext_value = digitalocean_droplet.web.ipv4_address
+  plaintext_value = digitalocean_reserved_ip.web.ip_address
 }
 
 resource "github_actions_secret" "deploy_ssh_key" {
@@ -204,10 +232,28 @@ resource "github_actions_secret" "database_url" {
   plaintext_value = local.database_url
 }
 
+resource "github_actions_secret" "auth_secret" {
+  repository      = data.github_repository.site.name
+  secret_name     = "AUTH_SECRET"
+  plaintext_value = var.auth_secret
+}
+
+resource "github_actions_secret" "github_client_id" {
+  repository      = data.github_repository.site.name
+  secret_name     = "OAUTH_GITHUB_CLIENT_ID"
+  plaintext_value = var.github_client_id
+}
+
+resource "github_actions_secret" "github_client_secret" {
+  repository      = data.github_repository.site.name
+  secret_name     = "OAUTH_GITHUB_CLIENT_SECRET"
+  plaintext_value = var.github_client_secret
+}
+
 # --- Outputs ---
 
 output "droplet_ip" {
-  value = digitalocean_droplet.web.ipv4_address
+  value = digitalocean_reserved_ip.web.ip_address
 }
 
 output "deploy_public_key" {
