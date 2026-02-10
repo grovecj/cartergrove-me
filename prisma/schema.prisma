@@ -120,3 +120,16 @@ model PortfolioProject {
   liveUrl     String
   order       Int    @default(0)
 }
+
+model Banner {
+  id        String   @id @default(cuid())
+  message   String
+  link      String?
+  linkText  String?
+  variant   String   @default("info") // "info" | "warning" | "success"
+  pagePath  String?  // null = global, "/resume" = page-specific
+  active    Boolean  @default(true)
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
