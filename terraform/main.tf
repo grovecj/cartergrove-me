@@ -202,6 +202,15 @@ resource "digitalocean_database_user" "cartergrove" {
   name       = "cartergrove"
 }
 
+resource "digitalocean_database_firewall" "cartergrove" {
+  cluster_id = data.digitalocean_database_cluster.postgres.id
+
+  rule {
+    type  = "droplet"
+    value = digitalocean_droplet.web.id
+  }
+}
+
 locals {
   database_url = "postgresql://${digitalocean_database_user.cartergrove.name}:${digitalocean_database_user.cartergrove.password}@${data.digitalocean_database_cluster.postgres.host}:${data.digitalocean_database_cluster.postgres.port}/${digitalocean_database_db.cartergrove.name}?sslmode=require"
 }
