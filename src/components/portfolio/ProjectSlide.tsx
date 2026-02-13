@@ -32,10 +32,10 @@ export function ProjectSlide({
         {/* Text content */}
         <div className="flex flex-col justify-center space-y-6">
           <div>
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">{title}</h2>
+            <h2 className="font-serif text-3xl tracking-tight sm:text-4xl">{title}</h2>
             <p className="mt-2 text-lg text-muted-foreground">{tagline}</p>
           </div>
-          <p className="text-muted-foreground">{description}</p>
+          <p className="leading-relaxed text-muted-foreground">{description}</p>
           <div className="flex flex-wrap gap-2">
             {techStack.map((tech) => (
               <Badge key={tech} variant="outline">
@@ -75,11 +75,11 @@ export function ProjectSlide({
             <img
               src={heroImage}
               alt={`${title} screenshot`}
-              className="rounded-lg border shadow-lg"
+              className="rounded-xl border shadow-lg"
             />
           ) : (
-            <div className="flex aspect-video w-full items-center justify-center rounded-lg border bg-muted">
-              <span className="text-4xl font-bold text-muted-foreground/30">
+            <div className="flex aspect-video w-full items-center justify-center rounded-xl border bg-muted">
+              <span className="font-serif text-4xl text-muted-foreground/30">
                 {title}
               </span>
             </div>

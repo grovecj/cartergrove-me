@@ -35,7 +35,7 @@ export default async function BlogPage({
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-12">
-      <h1 className="text-3xl font-bold tracking-tight">Blog</h1>
+      <h1 className="font-serif text-4xl tracking-tight">Blog</h1>
       <p className="mt-2 text-muted-foreground">
         Thoughts on software development, tooling, and tech.
       </p>
@@ -63,7 +63,7 @@ export default async function BlogPage({
         ) : (
           filtered.map((post) => (
             <Link key={post.id} href={`/blog/${post.slug}`} className="group block">
-              <Card className="transition-shadow group-hover:shadow-md">
+              <Card className="border-l-2 border-l-transparent transition-all duration-300 group-hover:-translate-y-0.5 group-hover:border-l-primary group-hover:shadow-md">
                 <CardHeader>
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <time dateTime={post.createdAt.toISOString()}>
@@ -74,7 +74,7 @@ export default async function BlogPage({
                       })}
                     </time>
                   </div>
-                  <CardTitle className="group-hover:text-primary transition-colors">
+                  <CardTitle className="font-serif text-lg transition-colors group-hover:text-primary">
                     {post.title}
                   </CardTitle>
                   <CardDescription>{post.excerpt}</CardDescription>

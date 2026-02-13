@@ -2,7 +2,6 @@ import { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Download, Mail, MapPin, Globe, Github, Linkedin } from "lucide-react";
 import Link from "next/link";
@@ -49,8 +48,8 @@ export default async function ResumePage() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold">{profile.name}</h1>
-          <p className="text-lg text-muted-foreground">{profile.title}</p>
+          <h1 className="font-serif text-4xl tracking-tight">{profile.name}</h1>
+          <p className="mt-1 text-lg text-muted-foreground">{profile.title}</p>
           <div className="mt-3 flex flex-wrap gap-3 text-sm text-muted-foreground">
             <span className="flex items-center gap-1">
               <MapPin className="h-3.5 w-3.5" /> {profile.location}
@@ -77,19 +76,19 @@ export default async function ResumePage() {
         </Button>
       </div>
 
-      <Separator className="my-8" />
+      <div className="my-10 h-px bg-border/60" />
 
       {/* Summary */}
       <section>
-        <h2 className="mb-3 text-xl font-semibold">Summary</h2>
-        <p className="text-muted-foreground">{profile.summary}</p>
+        <h2 className="mb-3 font-serif text-2xl">Summary</h2>
+        <p className="leading-relaxed text-muted-foreground">{profile.summary}</p>
       </section>
 
-      <Separator className="my-8" />
+      <div className="my-10 h-px bg-border/60" />
 
       {/* Skills */}
       <section>
-        <h2 className="mb-4 text-xl font-semibold">Skills</h2>
+        <h2 className="mb-5 font-serif text-2xl">Skills</h2>
         <div className="grid gap-4 sm:grid-cols-2">
           {skills.map((skill) => (
             <Card key={skill.id}>
@@ -112,12 +111,12 @@ export default async function ResumePage() {
         </div>
       </section>
 
-      <Separator className="my-8" />
+      <div className="my-10 h-px bg-border/60" />
 
       {/* Experience */}
       <section>
-        <h2 className="mb-4 text-xl font-semibold">Experience</h2>
-        <div className="space-y-6">
+        <h2 className="mb-5 font-serif text-2xl">Experience</h2>
+        <div className="space-y-8">
           {experience.map((job) => (
             <div key={job.id}>
               <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
@@ -129,10 +128,10 @@ export default async function ResumePage() {
                   {job.start} &ndash; {job.end}
                 </p>
               </div>
-              <ul className="mt-2 space-y-1">
+              <ul className="mt-3 space-y-1.5">
                 {job.bullets.map((bullet: string, i: number) => (
-                  <li key={i} className="flex gap-2 text-sm text-muted-foreground">
-                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-muted-foreground/50" />
+                  <li key={i} className="flex gap-2 text-sm leading-relaxed text-muted-foreground">
+                    <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-primary/60" />
                     {bullet}
                   </li>
                 ))}
@@ -142,12 +141,12 @@ export default async function ResumePage() {
         </div>
       </section>
 
-      <Separator className="my-8" />
+      <div className="my-10 h-px bg-border/60" />
 
       {/* Education */}
       <section>
-        <h2 className="mb-4 text-xl font-semibold">Education</h2>
-        <div className="space-y-4">
+        <h2 className="mb-5 font-serif text-2xl">Education</h2>
+        <div className="space-y-6">
           {education.map((edu) => (
             <div key={edu.id}>
               <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
@@ -163,10 +162,10 @@ export default async function ResumePage() {
                 </p>
               </div>
               {edu.bullets.length > 0 && (
-                <ul className="mt-2 space-y-1">
+                <ul className="mt-3 space-y-1.5">
                   {edu.bullets.map((bullet: string, i: number) => (
-                    <li key={i} className="flex gap-2 text-sm text-muted-foreground">
-                      <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-muted-foreground/50" />
+                    <li key={i} className="flex gap-2 text-sm leading-relaxed text-muted-foreground">
+                      <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-primary/60" />
                       {bullet}
                     </li>
                   ))}

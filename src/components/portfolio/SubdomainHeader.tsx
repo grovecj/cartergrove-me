@@ -8,7 +8,7 @@ interface SubdomainHeaderProps {
 
 export function SubdomainHeader({ subdomain }: SubdomainHeaderProps) {
   return (
-    <div className="flex items-baseline gap-0 text-2xl font-bold tracking-tight sm:text-3xl">
+    <div className="flex items-baseline gap-0 font-serif text-2xl tracking-tight sm:text-3xl">
       <AnimatePresence mode="wait">
         <motion.span
           key={subdomain}

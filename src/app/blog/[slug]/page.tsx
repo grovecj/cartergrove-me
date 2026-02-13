@@ -36,7 +36,7 @@ export default async function BlogPostPage({ params }: Props) {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-12">
-      <Button variant="ghost" size="sm" asChild className="mb-6">
+      <Button variant="ghost" size="sm" asChild className="mb-8">
         <Link href="/blog">
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Blog
@@ -44,7 +44,7 @@ export default async function BlogPostPage({ params }: Props) {
       </Button>
 
       <article>
-        <header className="mb-8">
+        <header className="mb-10">
           <time
             dateTime={post.createdAt.toISOString()}
             className="text-sm text-muted-foreground"
@@ -55,10 +55,10 @@ export default async function BlogPostPage({ params }: Props) {
               day: "numeric",
             })}
           </time>
-          <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
+          <h1 className="mt-3 font-serif text-4xl tracking-tight sm:text-5xl">
             {post.title}
           </h1>
-          <div className="mt-3 flex flex-wrap gap-1.5">
+          <div className="mt-4 flex flex-wrap gap-1.5">
             {tags.map((tag) => (
               <Badge key={tag} variant="secondary">
                 {tag}
@@ -68,7 +68,7 @@ export default async function BlogPostPage({ params }: Props) {
         </header>
 
         <div
-          className="prose prose-neutral dark:prose-invert max-w-none"
+          className="prose prose-neutral dark:prose-invert prose-a:text-primary prose-a:decoration-primary/40 max-w-none"
           dangerouslySetInnerHTML={{ __html: html }}
         />
       </article>

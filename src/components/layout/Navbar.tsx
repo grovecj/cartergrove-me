@@ -23,24 +23,27 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-sm">
       <nav className="mx-auto flex h-16 max-w-5xl items-center justify-between px-4">
-        <Link href="/" className="text-lg font-semibold tracking-tight">
+        <Link href="/" className="font-serif text-xl tracking-tight">
           Carter Grove
         </Link>
 
         {/* Desktop nav */}
-        <div className="hidden items-center gap-1 md:flex">
+        <div className="hidden items-center gap-6 md:flex">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               className={cn(
-                "rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent",
+                "relative py-1 text-sm transition-colors",
                 pathname === link.href
                   ? "text-foreground"
-                  : "text-muted-foreground"
+                  : "text-muted-foreground hover:text-foreground"
               )}
             >
               {link.label}
+              {pathname === link.href && (
+                <span className="absolute -bottom-0.5 left-0 right-0 h-px bg-primary" />
+              )}
             </Link>
           ))}
           <ThemeToggle />
@@ -57,17 +60,17 @@ export function Navbar() {
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-64">
-              <nav className="mt-8 flex flex-col gap-2">
+              <nav className="mt-8 flex flex-col gap-1">
                 {navLinks.map((link) => (
                   <Link
                     key={link.href}
                     href={link.href}
                     onClick={() => setOpen(false)}
                     className={cn(
-                      "rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent",
+                      "rounded-md px-3 py-2.5 text-sm transition-colors",
                       pathname === link.href
-                        ? "text-foreground"
-                        : "text-muted-foreground"
+                        ? "bg-accent text-foreground"
+                        : "text-muted-foreground hover:bg-accent hover:text-foreground"
                     )}
                   >
                     {link.label}
