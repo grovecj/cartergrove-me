@@ -4,7 +4,12 @@ import { PrismaPg } from "@prisma/adapter-pg";
 
 import { Pool } from "pg";
 
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+const url = process.env.DATABASE_URL ?? "";
+const needsSsl = url.includes("sslmode=");
+const pool = new Pool({
+  connectionString: url.replace(/[?&]sslmode=[^&]*/g, ""),
+  ssl: needsSsl ? { rejectUnauthorized: false } : undefined,
+});
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
