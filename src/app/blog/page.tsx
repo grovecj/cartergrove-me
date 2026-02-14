@@ -3,6 +3,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { FadeInView } from "@/components/ui/fade-in-view";
 
 export const dynamic = "force-dynamic";
 
@@ -35,25 +36,29 @@ export default async function BlogPage({
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-12">
-      <h1 className="text-3xl font-bold tracking-tight">Blog</h1>
-      <p className="mt-2 text-muted-foreground">
-        Thoughts on software development, tooling, and tech.
-      </p>
+      <FadeInView>
+        <h1 className="text-3xl font-bold tracking-tight">Blog</h1>
+        <p className="mt-2 text-muted-foreground">
+          Thoughts on software development, tooling, and tech.
+        </p>
+      </FadeInView>
 
       {/* Tag filter */}
       {allTags.length > 0 && (
-        <div className="mt-6 flex flex-wrap gap-2">
-          <Link href="/blog">
-            <Badge variant={!params.tag ? "default" : "outline"}>All</Badge>
-          </Link>
-          {allTags.map((tag) => (
-            <Link key={tag} href={`/blog?tag=${encodeURIComponent(tag)}`}>
-              <Badge variant={params.tag === tag ? "default" : "outline"}>
-                {tag}
-              </Badge>
+        <FadeInView delay={0.1}>
+          <div className="mt-6 flex flex-wrap gap-2">
+            <Link href="/blog">
+              <Badge variant={!params.tag ? "default" : "outline"}>All</Badge>
             </Link>
-          ))}
-        </div>
+            {allTags.map((tag) => (
+              <Link key={tag} href={`/blog?tag=${encodeURIComponent(tag)}`}>
+                <Badge variant={params.tag === tag ? "default" : "outline"}>
+                  {tag}
+                </Badge>
+              </Link>
+            ))}
+          </div>
+        </FadeInView>
       )}
 
       {/* Post list */}
@@ -61,33 +66,35 @@ export default async function BlogPage({
         {filtered.length === 0 ? (
           <p className="text-muted-foreground">No posts yet.</p>
         ) : (
-          filtered.map((post) => (
-            <Link key={post.id} href={`/blog/${post.slug}`} className="group block">
-              <Card className="transition-shadow group-hover:shadow-md">
-                <CardHeader>
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <time dateTime={post.createdAt.toISOString()}>
-                      {post.createdAt.toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      })}
-                    </time>
-                  </div>
-                  <CardTitle className="group-hover:text-primary transition-colors">
-                    {post.title}
-                  </CardTitle>
-                  <CardDescription>{post.excerpt}</CardDescription>
-                  <div className="flex flex-wrap gap-1.5 pt-2">
-                    {post.tags.map((tag: string) => (
-                      <Badge key={tag} variant="secondary" className="text-xs">
-                        {tag}
-                      </Badge>
-                    ))}
-                  </div>
-                </CardHeader>
-              </Card>
-            </Link>
+          filtered.map((post, i) => (
+            <FadeInView key={post.id} delay={0.1 + i * 0.05}>
+              <Link href={`/blog/${post.slug}`} className="group block">
+                <Card>
+                  <CardHeader>
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <time dateTime={post.createdAt.toISOString()}>
+                        {post.createdAt.toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })}
+                      </time>
+                    </div>
+                    <CardTitle className="group-hover:text-primary transition-colors">
+                      {post.title}
+                    </CardTitle>
+                    <CardDescription>{post.excerpt}</CardDescription>
+                    <div className="flex flex-wrap gap-1.5 pt-2">
+                      {post.tags.map((tag: string) => (
+                        <Badge key={tag} variant="secondary" className="text-xs">
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+                  </CardHeader>
+                </Card>
+              </Link>
+            </FadeInView>
           ))
         )}
       </div>

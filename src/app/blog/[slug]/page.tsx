@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { renderMarkdown } from "@/lib/markdown";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { FadeInView } from "@/components/ui/fade-in-view";
 import { ArrowLeft } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -44,33 +45,37 @@ export default async function BlogPostPage({ params }: Props) {
       </Button>
 
       <article>
-        <header className="mb-8">
-          <time
-            dateTime={post.createdAt.toISOString()}
-            className="text-sm text-muted-foreground"
-          >
-            {post.createdAt.toLocaleDateString("en-US", {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            })}
-          </time>
-          <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
-            {post.title}
-          </h1>
-          <div className="mt-3 flex flex-wrap gap-1.5">
-            {tags.map((tag) => (
-              <Badge key={tag} variant="secondary">
-                {tag}
-              </Badge>
-            ))}
-          </div>
-        </header>
+        <FadeInView>
+          <header className="mb-8">
+            <time
+              dateTime={post.createdAt.toISOString()}
+              className="text-sm text-muted-foreground"
+            >
+              {post.createdAt.toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+            </time>
+            <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
+              {post.title}
+            </h1>
+            <div className="mt-3 flex flex-wrap gap-1.5">
+              {tags.map((tag) => (
+                <Badge key={tag} variant="secondary">
+                  {tag}
+                </Badge>
+              ))}
+            </div>
+          </header>
+        </FadeInView>
 
-        <div
-          className="prose prose-neutral dark:prose-invert max-w-none"
-          dangerouslySetInnerHTML={{ __html: html }}
-        />
+        <FadeInView delay={0.15}>
+          <div
+            className="prose prose-neutral dark:prose-invert max-w-none"
+            dangerouslySetInnerHTML={{ __html: html }}
+          />
+        </FadeInView>
       </article>
     </div>
   );

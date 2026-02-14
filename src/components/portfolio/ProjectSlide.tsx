@@ -2,6 +2,7 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { FadeInView } from "@/components/ui/fade-in-view";
 import { ExternalLink, Github } from "lucide-react";
 import Link from "next/link";
 
@@ -28,7 +29,7 @@ export function ProjectSlide({
 }: ProjectSlideProps) {
   return (
     <div className="flex h-full items-center justify-center px-4">
-      <div className="grid w-full max-w-5xl gap-8 lg:grid-cols-2 lg:gap-12">
+      <FadeInView className="grid w-full max-w-5xl gap-8 lg:grid-cols-2 lg:gap-12">
         {/* Text content */}
         <div className="flex flex-col justify-center space-y-6">
           <div>
@@ -85,7 +86,7 @@ export function ProjectSlide({
             </div>
           )}
         </div>
-      </div>
+      </FadeInView>
     </div>
   );
 }
