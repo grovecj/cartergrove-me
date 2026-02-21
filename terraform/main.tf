@@ -73,16 +73,31 @@ variable "github_client_secret" {
   sensitive   = true
 }
 
-# --- GitHub Repository ---
-# The repo already exists at github.com/grovecj/cartergrove-me.
-# Use a data source to reference it without trying to create it.
+variable "admin_ip" {
+  description = "IP address allowed to connect directly to the managed database (for local dev/debugging)"
+  type        = string
+  default     = ""
+}
 
-data "github_repository" "site" {
-  full_name = "grovecj/cartergrove-me"
+# --- GitHub Repository ---
+# Import: terraform import github_repository.site cartergrove-me
+
+resource "github_repository" "site" {
+  name        = "cartergrove-me"
+  description = "Personal website — resume, portfolio, and blog"
+  homepage_url = "https://cartergrove.me"
+
+  visibility = "public"
+
+  has_issues   = true
+  has_projects = false
+  has_wiki     = false
+
+  delete_branch_on_merge = true
 }
 
 resource "github_branch_protection" "main" {
-  repository_id = data.github_repository.site.node_id
+  repository_id = github_repository.site.node_id
   pattern       = "main"
 
   required_pull_request_reviews {
@@ -209,6 +224,14 @@ resource "digitalocean_database_firewall" "cartergrove" {
     type  = "droplet"
     value = digitalocean_droplet.web.id
   }
+
+  dynamic "rule" {
+    for_each = var.admin_ip != "" ? [var.admin_ip] : []
+    content {
+      type  = "ip_addr"
+      value = rule.value
+    }
+  }
 }
 
 locals {
@@ -224,37 +247,37 @@ resource "tls_private_key" "deploy" {
 # --- GitHub Actions Secrets ---
 
 resource "github_actions_secret" "droplet_ip" {
-  repository      = data.github_repository.site.name
+  repository      = github_repository.site.name
   secret_name     = "DROPLET_IP"
   plaintext_value = digitalocean_reserved_ip.web.ip_address
 }
 
 resource "github_actions_secret" "deploy_ssh_key" {
-  repository      = data.github_repository.site.name
+  repository      = github_repository.site.name
   secret_name     = "DEPLOY_SSH_KEY"
   plaintext_value = tls_private_key.deploy.private_key_openssh
 }
 
 resource "github_actions_secret" "database_url" {
-  repository      = data.github_repository.site.name
+  repository      = github_repository.site.name
   secret_name     = "DATABASE_URL"
   plaintext_value = local.database_url
 }
 
 resource "github_actions_secret" "auth_secret" {
-  repository      = data.github_repository.site.name
+  repository      = github_repository.site.name
   secret_name     = "AUTH_SECRET"
   plaintext_value = var.auth_secret
 }
 
 resource "github_actions_secret" "github_client_id" {
-  repository      = data.github_repository.site.name
+  repository      = github_repository.site.name
   secret_name     = "OAUTH_GITHUB_CLIENT_ID"
   plaintext_value = var.github_client_id
 }
 
 resource "github_actions_secret" "github_client_secret" {
-  repository      = data.github_repository.site.name
+  repository      = github_repository.site.name
   secret_name     = "OAUTH_GITHUB_CLIENT_SECRET"
   plaintext_value = var.github_client_secret
 }
