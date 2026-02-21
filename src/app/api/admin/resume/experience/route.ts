@@ -21,11 +21,10 @@ export async function PUT(req: NextRequest) {
 
   const experiences = await req.json();
 
-  await prisma.workExperience.deleteMany();
-
-  for (const exp of experiences) {
-    await prisma.workExperience.create({
-      data: {
+  await prisma.$transaction(async (tx) => {
+    await tx.workExperience.deleteMany();
+    await tx.workExperience.createMany({
+      data: experiences.map((exp: { company: string; title: string; location: string; start: string; end: string; bullets: string[]; order: number }) => ({
         company: exp.company,
         title: exp.title,
         location: exp.location,
@@ -33,9 +32,9 @@ export async function PUT(req: NextRequest) {
         end: exp.end,
         bullets: JSON.stringify(exp.bullets),
         order: exp.order,
-      },
+      })),
     });
-  }
+  });
 
   return NextResponse.json({ success: true });
 }

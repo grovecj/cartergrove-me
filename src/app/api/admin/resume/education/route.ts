@@ -21,22 +21,23 @@ export async function PUT(req: NextRequest) {
 
   const entries = await req.json();
 
-  await prisma.education.deleteMany();
+  const data = entries.map((entry: { school: string; degree: string; field: string; start: string; end: string; gpa?: string; bullets?: string[]; order: number }) => ({
+    school: entry.school,
+    degree: entry.degree,
+    field: entry.field,
+    start: entry.start,
+    end: entry.end,
+    gpa: entry.gpa || null,
+    bullets: entry.bullets?.length ? JSON.stringify(entry.bullets) : null,
+    order: entry.order,
+  }));
 
-  for (const entry of entries) {
-    await prisma.education.create({
-      data: {
-        school: entry.school,
-        degree: entry.degree,
-        field: entry.field,
-        start: entry.start,
-        end: entry.end,
-        gpa: entry.gpa || null,
-        bullets: entry.bullets?.length ? JSON.stringify(entry.bullets) : null,
-        order: entry.order,
-      },
-    });
-  }
+  await prisma.$transaction(async (tx) => {
+    await tx.education.deleteMany();
+    if (data.length > 0) {
+      await tx.education.createMany({ data });
+    }
+  });
 
   return NextResponse.json({ success: true });
 }

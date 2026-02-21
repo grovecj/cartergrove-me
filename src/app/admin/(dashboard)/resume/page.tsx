@@ -151,6 +151,7 @@ export default function AdminResumePage() {
         setEducation(
           data.map((e) => ({
             ...e,
+            gpa: (e.gpa as string) ?? "",
             bullets: (e.bullets as string[]).join("\n"),
           })) as EducationData[]
         )
@@ -172,7 +173,7 @@ export default function AdminResumePage() {
 
   /* --- Skills helpers --- */
   const addSkill = () =>
-    setSkills([...skills, { category: "", items: "", order: skills.length }]);
+    setSkills([...skills, { id: crypto.randomUUID(), category: "", items: "", order: skills.length }]);
 
   const removeSkill = (i: number) => setSkills(skills.filter((_, idx) => idx !== i));
 
@@ -201,7 +202,7 @@ export default function AdminResumePage() {
   const addExperience = () =>
     setExperiences([
       ...experiences,
-      { company: "", title: "", location: "", start: "", end: "", bullets: "", order: experiences.length },
+      { id: crypto.randomUUID(), company: "", title: "", location: "", start: "", end: "", bullets: "", order: experiences.length },
     ]);
 
   const removeExperience = (i: number) =>
@@ -223,7 +224,7 @@ export default function AdminResumePage() {
           location: e.location,
           start: e.start,
           end: e.end,
-          bullets: e.bullets.split("\n").filter(Boolean),
+          bullets: e.bullets.split("\n").map((line) => line.trim()).filter(Boolean),
           order: i,
         }))
       ),
@@ -236,7 +237,7 @@ export default function AdminResumePage() {
   const addEducation = () =>
     setEducation([
       ...education,
-      { school: "", degree: "", field: "", start: "", end: "", gpa: "", bullets: "", order: education.length },
+      { id: crypto.randomUUID(), school: "", degree: "", field: "", start: "", end: "", gpa: "", bullets: "", order: education.length },
     ]);
 
   const removeEducation = (i: number) =>
@@ -252,16 +253,19 @@ export default function AdminResumePage() {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(
-        education.map((e, i) => ({
-          school: e.school,
-          degree: e.degree,
-          field: e.field,
-          start: e.start,
-          end: e.end,
-          gpa: e.gpa || null,
-          bullets: e.bullets.split("\n").filter(Boolean),
-          order: i,
-        }))
+        education.map((e, i) => {
+          const trimmedGpa = e.gpa?.trim();
+          return {
+            school: e.school,
+            degree: e.degree,
+            field: e.field,
+            start: e.start,
+            end: e.end,
+            gpa: trimmedGpa || null,
+            bullets: e.bullets.split("\n").map((line) => line.trim()).filter(Boolean),
+            order: i,
+          };
+        })
       ),
     });
     setEduSaving(false);
@@ -387,12 +391,12 @@ export default function AdminResumePage() {
 
       <div className="mt-4 space-y-4">
         {skills.map((skill, index) => (
-          <Card key={skill.id ?? index}>
+          <Card key={skill.id}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-base">
                 {skill.category || "New Skill Category"}
               </CardTitle>
-              <Button variant="ghost" size="icon" onClick={() => removeSkill(index)}>
+              <Button variant="ghost" size="icon" onClick={() => removeSkill(index)} aria-label="Remove skill category">
                 <Trash2 className="h-4 w-4" />
               </Button>
             </CardHeader>
@@ -442,14 +446,14 @@ export default function AdminResumePage() {
 
       <div className="mt-4 space-y-6">
         {experiences.map((exp, index) => (
-          <Card key={exp.id ?? index}>
+          <Card key={exp.id}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-base">
                 {exp.title && exp.company
                   ? `${exp.title} — ${exp.company}`
                   : "New Position"}
               </CardTitle>
-              <Button variant="ghost" size="icon" onClick={() => removeExperience(index)}>
+              <Button variant="ghost" size="icon" onClick={() => removeExperience(index)} aria-label="Remove position">
                 <Trash2 className="h-4 w-4" />
               </Button>
             </CardHeader>
@@ -530,12 +534,12 @@ export default function AdminResumePage() {
 
       <div className="mt-4 space-y-6">
         {education.map((edu, index) => (
-          <Card key={edu.id ?? index}>
+          <Card key={edu.id}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-base">
                 {edu.school || "New Education Entry"}
               </CardTitle>
-              <Button variant="ghost" size="icon" onClick={() => removeEducation(index)}>
+              <Button variant="ghost" size="icon" onClick={() => removeEducation(index)} aria-label="Remove education entry">
                 <Trash2 className="h-4 w-4" />
               </Button>
             </CardHeader>

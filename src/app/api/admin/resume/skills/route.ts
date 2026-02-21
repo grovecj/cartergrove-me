@@ -21,17 +21,16 @@ export async function PUT(req: NextRequest) {
 
   const skills = await req.json();
 
-  await prisma.skill.deleteMany();
-
-  for (const skill of skills) {
-    await prisma.skill.create({
-      data: {
+  await prisma.$transaction(async (tx) => {
+    await tx.skill.deleteMany();
+    await tx.skill.createMany({
+      data: skills.map((skill: { category: string; items: string[]; order: number }) => ({
         category: skill.category,
         items: JSON.stringify(skill.items),
         order: skill.order,
-      },
+      })),
     });
-  }
+  });
 
   return NextResponse.json({ success: true });
 }
