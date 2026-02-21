@@ -13,7 +13,7 @@ export default function HomePage() {
       {/* Hero */}
       <FadeInView>
         <section className="relative flex flex-col items-center gap-6 text-center rounded-2xl py-12 -mx-4 px-4 border border-border/60 overflow-hidden hero-card-elevated">
-          <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-l-2xl" />
+          <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary" />
           <div className="absolute inset-0 hero-diagonal-pattern -z-10" />
           <Image
             src="/images/headshot.png"
