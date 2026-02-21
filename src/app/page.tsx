@@ -12,7 +12,9 @@ export default function HomePage() {
     <div className="mx-auto max-w-5xl px-4 py-16">
       {/* Hero */}
       <FadeInView>
-        <section className="flex flex-col items-center gap-6 text-center gradient-moss rounded-2xl py-12 -mx-4 px-4">
+        <section className="relative flex flex-col items-center gap-6 text-center rounded-2xl py-12 -mx-4 px-4 border border-border/60 overflow-hidden hero-card-elevated">
+          <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary" />
+          <div className="absolute inset-0 hero-diagonal-pattern -z-10" />
           <Image
             src="/images/headshot.png"
             alt="Carter Grove"

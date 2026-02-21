@@ -147,3 +147,36 @@
     oklch(0.650 0.050 145 / 0.03) 100%
   );
 }
+
+/* ── Hero: Geometric Accent Bar ── */
+.hero-card-elevated {
+  background: var(--card);
+  box-shadow:
+    0 1px 3px oklch(0 0 0 / 0.04),
+    0 4px 16px oklch(0 0 0 / 0.06);
+}
+.dark .hero-card-elevated {
+  box-shadow:
+    0 1px 3px oklch(0 0 0 / 0.2),
+    0 4px 16px oklch(0 0 0 / 0.3);
+}
+.hero-diagonal-pattern {
+  background-color: var(--card);
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 14px,
+    oklch(0.512 0.045 145 / 0.04) 14px,
+    oklch(0.512 0.045 145 / 0.04) 15px
+  );
+}
+.dark .hero-diagonal-pattern {
+  background-color: var(--card);
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 14px,
+    oklch(0.650 0.050 145 / 0.06) 14px,
+    oklch(0.650 0.050 145 / 0.06) 15px
+  );
+}
