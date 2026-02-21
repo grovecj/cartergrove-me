@@ -12,9 +12,11 @@ export default function HomePage() {
       {/* Hero */}
       <FadeInView>
         <section className="flex flex-col items-center gap-6 text-center gradient-moss rounded-2xl py-12 -mx-4 px-4">
-          <div className="flex h-28 w-28 items-center justify-center rounded-full bg-muted text-3xl font-bold text-muted-foreground">
-            CG
-          </div>
+          <img
+            src="/images/headshot.png"
+            alt="Carter Grove"
+            className="h-28 w-28 rounded-full object-cover"
+          />
           <div className="space-y-2">
             <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
               Carter Grove

@@ -15,22 +15,22 @@ const prisma = new PrismaClient({ adapter });
 
 async function main() {
   // Resume Profile
+  const profileData = {
+    name: "Carter Grove",
+    title: "Senior Staff Engineer",
+    email: "carter.grove@protonmail.com",
+    phone: "(317) 935-6277",
+    location: "Noblesville, IN",
+    website: "https://cartergrove.me",
+    github: "grovecj",
+    linkedin: "cartergrove",
+    summary:
+      "Senior Staff Engineer with 10+ years of experience building backend systems, leading teams, and delivering high-impact products. Specialized in Java, TypeScript, microservices architecture, and distributed systems.",
+  };
   await prisma.resumeProfile.upsert({
     where: { id: "profile-1" },
-    update: {},
-    create: {
-      id: "profile-1",
-      name: "Carter Grove",
-      title: "Senior Staff Engineer",
-      email: "carter.grove@protonmail.com",
-      phone: "(317) 935-6277",
-      location: "Noblesville, IN",
-      website: "https://cartergrove.me",
-      github: "grovecj",
-      linkedin: "cartergrove",
-      summary:
-        "Senior Staff Engineer with 10+ years of experience building backend systems, leading teams, and delivering high-impact products. Specialized in Java, TypeScript, microservices architecture, and distributed systems.",
-    },
+    update: profileData,
+    create: { id: "profile-1", ...profileData },
   });
 
   // Skills
@@ -42,10 +42,11 @@ async function main() {
   ];
 
   for (const skill of skills) {
+    const data = { category: skill.category, items: JSON.stringify(skill.items), order: skill.order };
     await prisma.skill.upsert({
       where: { id: skill.id },
-      update: {},
-      create: { ...skill, items: JSON.stringify(skill.items) },
+      update: data,
+      create: { id: skill.id, ...data },
     });
   }
 
@@ -127,28 +128,37 @@ async function main() {
   ];
 
   for (const exp of experiences) {
+    const data = {
+      company: exp.company,
+      title: exp.title,
+      location: exp.location,
+      start: exp.start,
+      end: exp.end,
+      bullets: JSON.stringify(exp.bullets),
+      order: exp.order,
+    };
     await prisma.workExperience.upsert({
       where: { id: exp.id },
-      update: {},
-      create: { ...exp, bullets: JSON.stringify(exp.bullets) },
+      update: data,
+      create: { id: exp.id, ...data },
     });
   }
 
   // Education
+  const eduData = {
+    school: "Western Governor's University",
+    degree: "Bachelor of Science",
+    field: "Software Development",
+    start: "2016",
+    end: "Fall 2017",
+    gpa: null,
+    bullets: null,
+    order: 0,
+  };
   await prisma.education.upsert({
     where: { id: "edu-1" },
-    update: {},
-    create: {
-      id: "edu-1",
-      school: "Western Governor's University",
-      degree: "Bachelor of Science",
-      field: "Software Development",
-      start: "2016",
-      end: "Fall 2017",
-      gpa: null,
-      bullets: null,
-      order: 0,
-    },
+    update: eduData,
+    create: { id: "edu-1", ...eduData },
   });
 
   // Portfolio Projects
