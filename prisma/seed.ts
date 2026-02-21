@@ -21,24 +21,24 @@ async function main() {
     create: {
       id: "profile-1",
       name: "Carter Grove",
-      title: "Software Engineer",
-      email: "carter@cartergrove.me",
-      phone: "(555) 123-4567",
-      location: "United States",
+      title: "Senior Staff Engineer",
+      email: "carter.grove@protonmail.com",
+      phone: "(317) 935-6277",
+      location: "Noblesville, IN",
       website: "https://cartergrove.me",
       github: "grovecj",
       linkedin: "cartergrove",
       summary:
-        "Full-stack software engineer with experience building web applications using TypeScript, React, Spring Boot, and cloud infrastructure. Passionate about clean code, developer experience, and shipping reliable software.",
+        "Senior Staff Engineer with 10+ years of experience building backend systems, leading teams, and delivering high-impact products. Specialized in Java, TypeScript, microservices architecture, and distributed systems.",
     },
   });
 
   // Skills
   const skills = [
-    { id: "skill-1", category: "Languages", items: ["TypeScript", "JavaScript", "Java", "Kotlin", "Python", "SQL"], order: 0 },
-    { id: "skill-2", category: "Frontend", items: ["React", "Next.js", "Tailwind CSS", "HTML/CSS", "Vite"], order: 1 },
-    { id: "skill-3", category: "Backend", items: ["Spring Boot", "Node.js", "REST APIs", "PostgreSQL", "Prisma"], order: 2 },
-    { id: "skill-4", category: "DevOps & Tools", items: ["Docker", "GitHub Actions", "Terraform", "nginx", "Linux", "Git"], order: 3 },
+    { id: "skill-1", category: "Languages", items: ["Java", "JavaScript/TypeScript", "SQL"], order: 0 },
+    { id: "skill-2", category: "Frameworks & Libraries", items: ["Spring Boot", "React", "GraphQL", "gRPC", "Hibernate"], order: 1 },
+    { id: "skill-3", category: "Infrastructure & Tools", items: ["PostgreSQL", "Kubernetes", "AWS (SQS, Lambda)", "Docker", "Git", "Maven"], order: 2 },
+    { id: "skill-4", category: "Practices", items: ["Microservices architecture", "Distributed systems", "Database replication", "API design"], order: 3 },
   ];
 
   for (const skill of skills) {
@@ -50,25 +50,89 @@ async function main() {
   }
 
   // Work Experience
-  await prisma.workExperience.upsert({
-    where: { id: "exp-1" },
-    update: {},
-    create: {
+  const experiences = [
+    {
       id: "exp-1",
-      company: "Acme Corp",
-      title: "Software Engineer",
-      location: "Remote",
-      start: "Jan 2023",
+      company: "Fanatics Betting & Gaming",
+      title: "Senior Staff Engineer",
+      location: "Indianapolis, IN",
+      start: "Sept 2022",
       end: "Present",
-      bullets: JSON.stringify([
-        "Built and maintained full-stack web applications using React, TypeScript, and Spring Boot",
-        "Designed and implemented RESTful APIs serving thousands of daily requests",
-        "Set up CI/CD pipelines with GitHub Actions, reducing deployment time by 60%",
-        "Collaborated with cross-functional teams to deliver features on tight deadlines",
-      ]),
+      bullets: [
+        "Designed and built the backend content GraphQL service powering the discover, schedule, league, and single event pages for the sportsbook mobile app, enabling a successful closed beta launch six months after joining",
+        "Reverse engineered and became the subject matter expert on the inherited bonus engine; integrated FanCash and built the initial version of Refer a Friend, the company's most important acquisition channel",
+        "Integrated bonus functionality into the betslip, allowing users to opt in and apply offers in a unified experience with improved visibility",
+        "Led an 18-month large-scale migration extracting the bonus engine from a monolith into six new microservices backed by a new PostgreSQL database, while continuously operating and enhancing the live system",
+        "Served as IC leader for a team of 10 engineers at peak staffing\u2014unblocking contributors, reviewing code, creating test plans, and coordinating launches across the organization",
+      ],
       order: 0,
     },
-  });
+    {
+      id: "exp-2",
+      company: "DMI (KAR Global \u2013 Openlane)",
+      title: "Technical Lead & Managing Consultant",
+      location: "Indianapolis, IN",
+      start: "Nov 2018",
+      end: "Sept 2022",
+      bullets: [
+        "Launched Simulcast, a product allowing online users to participate and bid in physical auctions by integrating the on-site vehicle data system with a third-party auction platform; rolled out to 75+ auction sites",
+        "Built Upstream Simulcast, an online-only auction experience requiring reverse engineering of the poorly documented Openlane system to source vehicle data without physical auction dependencies",
+        "Led a team of four developers to create a new bidding API on AWS, enabling high-volume buyers to bid programmatically without the website UI",
+        "Integrated Google Tag Manager, Five9 live chat, and accessiBe into the legacy ADESA marketplace",
+        "Migrated AuctionACCESS integration from IBM Message Flow and MQ to AWS SQS and Lambda",
+        "Acted as first-line manager for a team of six new college graduates, providing coaching, preparing performance reviews, and executing action plans",
+      ],
+      order: 1,
+    },
+    {
+      id: "exp-3",
+      company: "DMI (Allison Transmission)",
+      title: "Software Engineer",
+      location: "Indianapolis, IN",
+      start: "Jan 2018",
+      end: "Nov 2018",
+      bullets: [
+        "Built the admin portal and permissioning infrastructure for a centralized subscription platform that packaged Allison's suite of applications for sale",
+        "Assumed tech lead responsibilities for back-end modules after the departure of the senior resource mid-project",
+        "Tech stack: Spring Boot, Hibernate, Oracle, Maven (back end); React/Redux (front end)",
+      ],
+      order: 2,
+    },
+    {
+      id: "exp-4",
+      company: "Allegient, LLC",
+      title: "Software Engineering Intern",
+      location: "Indianapolis, IN",
+      start: "June 2015",
+      end: "Aug 2015",
+      bullets: [
+        "Implemented the front end of an internal talent-tracking application in AngularJS to help match consultants with pipeline projects based on skills",
+        "Developed and formalized an agile process for internal projects",
+      ],
+      order: 3,
+    },
+    {
+      id: "exp-5",
+      company: "Rose-Hulman Institute of Technology",
+      title: "Student Laptop Technician",
+      location: "Terre Haute, IN",
+      start: "June 2014",
+      end: "May 2015",
+      bullets: [
+        "Prepared 600 laptops for the incoming freshman class, handling logistics, imaging, software installation, and welcome kit assembly",
+        "Provided level 2 service desk support, troubleshooting software issues and performing warranty repairs",
+      ],
+      order: 4,
+    },
+  ];
+
+  for (const exp of experiences) {
+    await prisma.workExperience.upsert({
+      where: { id: exp.id },
+      update: {},
+      create: { ...exp, bullets: JSON.stringify(exp.bullets) },
+    });
+  }
 
   // Education
   await prisma.education.upsert({
@@ -76,16 +140,13 @@ async function main() {
     update: {},
     create: {
       id: "edu-1",
-      school: "University of Technology",
+      school: "Western Governor's University",
       degree: "Bachelor of Science",
-      field: "Computer Science",
-      start: "Aug 2019",
-      end: "May 2023",
-      gpa: "3.8",
-      bullets: JSON.stringify([
-        "Dean's List — All semesters",
-        "Senior Capstone: Built a real-time collaborative code editor",
-      ]),
+      field: "Software Development",
+      start: "2016",
+      end: "Fall 2017",
+      gpa: null,
+      bullets: null,
       order: 0,
     },
   });
