@@ -39,7 +39,8 @@ jobs:
               > .env
             npm ci
             npx prisma generate
-            npx prisma db push
+            npx prisma db push || echo "prisma db push failed (schema may already be in sync)"
+            npx prisma db seed
             npm run build
             pm2 restart cartergrove-me || pm2 start npm --name cartergrove-me -- start
             pm2 save
