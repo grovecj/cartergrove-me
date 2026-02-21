@@ -162,69 +162,65 @@ async function main() {
   });
 
   // Portfolio Projects
+  const proj1Data = {
+    slug: "gif-clipper",
+    title: "Gif Clipper",
+    subdomain: "gif",
+    tagline: "Cross-platform screen capture to GIF",
+    description:
+      "A desktop application that lets you capture any region of your screen and instantly convert it to an optimized GIF. Built with Electron for cross-platform support, React for the UI, and a Spring Boot backend for processing and storage.",
+    techStack: JSON.stringify(["Electron", "TypeScript", "React", "Spring Boot", "Kotlin", "FFmpeg"]),
+    features: JSON.stringify([
+      "Region selection with resizable overlay",
+      "Real-time preview before capture",
+      "Automatic GIF optimization and compression",
+      "Cloud upload and shareable links",
+      "Cross-platform: Windows, macOS, Linux",
+    ]),
+    heroImage: null,
+    githubUrl: "https://github.com/grovecj/gif-clipper",
+    liveUrl: "https://gif.cartergrove.me",
+    order: 0,
+  };
   await prisma.portfolioProject.upsert({
     where: { id: "proj-1" },
-    update: {},
-    create: {
-      id: "proj-1",
-      slug: "gif-clipper",
-      title: "Gif Clipper",
-      subdomain: "gif",
-      tagline: "Cross-platform screen capture to GIF",
-      description:
-        "A desktop application that lets you capture any region of your screen and instantly convert it to an optimized GIF. Built with Electron for cross-platform support, React for the UI, and a Spring Boot backend for processing and storage.",
-      techStack: JSON.stringify(["Electron", "TypeScript", "React", "Spring Boot", "Kotlin", "FFmpeg"]),
-      features: JSON.stringify([
-        "Region selection with resizable overlay",
-        "Real-time preview before capture",
-        "Automatic GIF optimization and compression",
-        "Cloud upload and shareable links",
-        "Cross-platform: Windows, macOS, Linux",
-      ]),
-      heroImage: null,
-      githubUrl: "https://github.com/grovecj/gif-clipper",
-      liveUrl: "https://gif.cartergrove.me",
-      order: 0,
-    },
+    update: proj1Data,
+    create: { id: "proj-1", ...proj1Data },
   });
 
+  const proj2Data = {
+    slug: "mlb-stats",
+    title: "MLB Stats",
+    subdomain: "stats",
+    tagline: "Full-stack MLB statistics dashboard",
+    description:
+      "A comprehensive baseball statistics application with real-time data, historical comparisons, and interactive visualizations. React 18 frontend with TypeScript and Vite, backed by a Java 21 + Spring Boot 3.x API.",
+    techStack: JSON.stringify(["React 18", "TypeScript", "Vite", "Java 21", "Spring Boot 3", "PostgreSQL"]),
+    features: JSON.stringify([
+      "Real-time game scores and player stats",
+      "Historical stat comparisons across eras",
+      "Interactive charts and data visualizations",
+      "Advanced search and filtering",
+      "Responsive design for mobile and desktop",
+    ]),
+    heroImage: null,
+    githubUrl: "https://github.com/grovecj/mlb-stats",
+    liveUrl: "https://stats.cartergrove.me",
+    order: 1,
+  };
   await prisma.portfolioProject.upsert({
     where: { id: "proj-2" },
-    update: {},
-    create: {
-      id: "proj-2",
-      slug: "mlb-stats",
-      title: "MLB Stats",
-      subdomain: "stats",
-      tagline: "Full-stack MLB statistics dashboard",
-      description:
-        "A comprehensive baseball statistics application with real-time data, historical comparisons, and interactive visualizations. React 18 frontend with TypeScript and Vite, backed by a Java 21 + Spring Boot 3.x API.",
-      techStack: JSON.stringify(["React 18", "TypeScript", "Vite", "Java 21", "Spring Boot 3", "PostgreSQL"]),
-      features: JSON.stringify([
-        "Real-time game scores and player stats",
-        "Historical stat comparisons across eras",
-        "Interactive charts and data visualizations",
-        "Advanced search and filtering",
-        "Responsive design for mobile and desktop",
-      ]),
-      heroImage: null,
-      githubUrl: "https://github.com/grovecj/mlb-stats",
-      liveUrl: "https://stats.cartergrove.me",
-      order: 1,
-    },
+    update: proj2Data,
+    create: { id: "proj-2", ...proj2Data },
   });
 
   // Sample Blog Post
-  await prisma.blogPost.upsert({
-    where: { id: "post-1" },
-    update: {},
-    create: {
-      id: "post-1",
-      slug: "building-my-personal-site",
-      title: "Building My Personal Site with Next.js 15",
-      excerpt:
-        "How I built cartergrove.me with Next.js 15, Tailwind CSS, and a custom admin CMS.",
-      content: `# Building My Personal Site with Next.js 15
+  const blogData = {
+    slug: "building-my-personal-site",
+    title: "Building My Personal Site with Next.js 15",
+    excerpt:
+      "How I built cartergrove.me with Next.js 15, Tailwind CSS, and a custom admin CMS.",
+    content: `# Building My Personal Site with Next.js 15
 
 I recently rebuilt my personal website from scratch using Next.js 15 with the App Router, Tailwind CSS, and a custom admin CMS. Here's what I learned along the way.
 
@@ -254,22 +250,26 @@ The signature feature is the portfolio page with full-page snap scrolling. Each 
 
 I'm planning to add more projects and blog posts as I continue building. Stay tuned!
 `,
-      tags: JSON.stringify(["nextjs", "react", "webdev"]),
-      published: true,
-    },
+    tags: JSON.stringify(["nextjs", "react", "webdev"]),
+    published: true,
+  };
+  await prisma.blogPost.upsert({
+    where: { id: "post-1" },
+    update: blogData,
+    create: { id: "post-1", ...blogData },
   });
 
   // Under Construction Banner
+  const bannerData = {
+    message: "This site is under construction. Some content may be incomplete.",
+    variant: "warning",
+    active: true,
+    order: 0,
+  };
   await prisma.banner.upsert({
     where: { id: "banner-1" },
-    update: {},
-    create: {
-      id: "banner-1",
-      message: "This site is under construction. Some content may be incomplete.",
-      variant: "warning",
-      active: true,
-      order: 0,
-    },
+    update: bannerData,
+    create: { id: "banner-1", ...bannerData },
   });
 
   console.log("Database seeded successfully!");
