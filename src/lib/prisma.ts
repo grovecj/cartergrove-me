@@ -12,6 +12,7 @@ function createPrismaClient() {
   const pool = new Pool({
     connectionString: url.replace(/[?&]sslmode=[^&]*/g, ""),
     connectionTimeoutMillis: 5000,
+    max: 3,
     ssl: needsSsl ? { rejectUnauthorized: false } : undefined,
   });
   const adapter = new PrismaPg(pool);
