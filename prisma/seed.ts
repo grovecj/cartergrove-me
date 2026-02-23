@@ -8,6 +8,7 @@ const url = process.env.DATABASE_URL ?? "";
 const needsSsl = url.includes("sslmode=");
 const pool = new Pool({
   connectionString: url.replace(/[?&]sslmode=[^&]*/g, ""),
+  max: 3,
   ssl: needsSsl ? { rejectUnauthorized: false } : undefined,
 });
 const adapter = new PrismaPg(pool);
@@ -183,9 +184,9 @@ async function main() {
     order: 0,
   };
   await prisma.portfolioProject.upsert({
-    where: { id: "proj-1" },
+    where: { slug: "gif-clipper" },
     update: proj1Data,
-    create: { id: "proj-1", ...proj1Data },
+    create: proj1Data,
   });
 
   const proj2Data = {
@@ -209,9 +210,9 @@ async function main() {
     order: 1,
   };
   await prisma.portfolioProject.upsert({
-    where: { id: "proj-2" },
+    where: { slug: "mlb-stats" },
     update: proj2Data,
-    create: { id: "proj-2", ...proj2Data },
+    create: proj2Data,
   });
 
   // Sample Blog Post
@@ -254,9 +255,9 @@ I'm planning to add more projects and blog posts as I continue building. Stay tu
     published: true,
   };
   await prisma.blogPost.upsert({
-    where: { id: "post-1" },
+    where: { slug: "building-my-personal-site" },
     update: blogData,
-    create: { id: "post-1", ...blogData },
+    create: blogData,
   });
 
   // Under Construction Banner
